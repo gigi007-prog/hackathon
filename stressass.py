@@ -55,7 +55,23 @@ class StressAssessement:
 stress_assessement=StressAssessement.info_from_input() #collects the input and creates the StressAssessement object
 stress_assessement.information() #displayes the logged info
 
+#connecting this to the sql database in pgAdmin first create a database and table there 
+# then create virtual environment
+# install psycopg2
+# import psycopg2
+# def connect_to_db():
+#     """Connect to the PostgreSQL database."""
+#     try:
+#         conn = psycopg2.connect(
+#             dbname="your_database",
+#             user="your_username",
+#             password="your_password",
+#             host="localhost",  # or your database host
+#             port="5432"        # default PostgreSQL port
+#         )
+#         print("Connected to the database successfully!")
+#         return conn
+#     except Exception as e:
+#         print("Failed to connect to the database:", e)
+#         return None
 
-
-    
-    
