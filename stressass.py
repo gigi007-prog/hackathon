@@ -1,3 +1,5 @@
+import datetime
+print(datetime.date.today())
 print('Hello this is an app which will help you deal with your stress and anxiety ')
 print('We will ask you a few questions on your stress/anxiety levels and moods')
 
@@ -43,7 +45,7 @@ class StressAssessement:
         name = input("Please enter your name here:")
         #will start the while loop so it ensures that the data is correct and if its not it will ask the user for the correct data until he enters the correct data
         while True:
-            try: #this is used a lot fro input validation to check whether its acceotable or not 
+            try: #this is used a lot for input validation to check whether its acceotable or not 
                 age = int(input("Please enter your age here:"))
                 break
             except ValueError:
@@ -54,6 +56,7 @@ class StressAssessement:
 
 stress_assessement=StressAssessement.info_from_input() #collects the input and creates the StressAssessement object
 stress_assessement.information() #displayes the logged info
+
 
 #connecting this to the sql database in pgAdmin first create a database and table there 
 # then create virtual environment
@@ -74,4 +77,3 @@ stress_assessement.information() #displayes the logged info
 #     except Exception as e:
 #         print("Failed to connect to the database:", e)
 #         return None
-
