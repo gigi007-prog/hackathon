@@ -1,3 +1,4 @@
+import psycopg2
 import datetime
 print(datetime.date.today())
 print('Hello this is an app which will help you deal with your stress and anxiety ')
@@ -46,34 +47,79 @@ class StressAssessement:
         #will start the while loop so it ensures that the data is correct and if its not it will ask the user for the correct data until he enters the correct data
         while True:
             try: #this is used a lot for input validation to check whether its acceotable or not 
-                age = int(input("Please enter your age here:"))
+                age = int(input("Please enter your age: "))
+                if age < 0:
+                    print("Age cannot be negative. Please enter a valid age.")
+                    continue
                 break
             except ValueError:
-                print("You have entered an invalid number for age")
-        stress_lv= int(input("Please enter how stressed you feel at the moment from the scale of 0-10:"))
+                print("You entered an invalid number for age.")
+        
+        while True:
+            try:
+                stress_lv = int(input("Please rate your stress level from 0 to 10: "))
+                if 0 <= stress_lv <= 10:
+                    break
+                else:
+                    print("Stress level must be between 0 and 10.")
+            except ValueError:
+                print("You entered an invalid number for stress level.")
         return cls(name, age, stress_lv) #returns the class itself and is usually used in @classmethod refers to a classs and not an instance 
     
+    #connecting the information to postgresql 
+    def save_in_sql(self, conn): #conn used to connect python and sql together and is basically 'connection'
+        '''
+        will save the stress levels and other details on the sql database
+        '''
+        try:
+            with conn.cursor() as cursor:
+                cursor.execute(
+                    """
+                    INSERT INTO stress_levels (name, age, stress_level, date_todays)
+                    VALUES (%s, %s, %s, %s)
+                    """,
+                    (self.name, self.age, self.stress_lv, datetime.date.today())
+                )#inserts into the table these values
+                conn.commit()
+                print("Your details have successfully been saved!!!")
+        except Exception as e:# e is a variable holds the exception object and it contains information about what went wrong while trying to save the data to sql
+            conn.rollback()#a method that will undo all changes made to the database in the case of an error
+            print("There was an issue saving your details: ", e)
 
-stress_assessement=StressAssessement.info_from_input() #collects the input and creates the StressAssessement object
-stress_assessement.information() #displayes the logged info
+
+def sql_connection():
+    '''
+    will connect to postgresql
+    '''
+    try: 
+        connection= psycopg2.connect(
+            dbname='stress_levels',
+            user='gigi',
+            password='1234',
+            host='localhost',
+            port='5432')
+        print("\n Your information have been successfully connected to our database!")
+        return connection
+
+    except Exception as e:#same as in the save_in_sql we use the same notion but without the rollback
+        print("Failed to connect to the database:( ", e)
+        return None    
 
 
-#connecting this to the sql database in pgAdmin first create a database and table there 
-# then create virtual environment
-# install psycopg2
-# import psycopg2
-# def connect_to_db():
-#     """Connect to the PostgreSQL database."""
-#     try:
-#         conn = psycopg2.connect(
-#             dbname="your_database",
-#             user="your_username",
-#             password="your_password",
-#             host="localhost",  # or your database host
-#             port="5432"        # default PostgreSQL port
-#         )
-#         print("Connected to the database successfully!")
-#         return conn
-#     except Exception as e:
-#         print("Failed to connect to the database:", e)
-#         return None
+#the function to run the program cause who wants to waste code lines 
+
+def the_program():
+    '''
+    runs the whole thing
+    '''
+    connection= sql_connection()
+    if connection:
+        stress_assessment = StressAssessement.info_from_input()  # Collect user input
+        stress_assessment.information()  # Display recommendations
+        stress_assessment.save_in_sql(connection)  # Save to the database
+        connection.close()
+
+
+if __name__ == "__main__": #used to make sure that only a specific block of code runs only
+    the_program()    
+
