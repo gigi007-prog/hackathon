@@ -1,8 +1,8 @@
 import requests
 
 # Replace with your API key
-API_KEY = 'd6f35ef82e0c36cd064c1b6d5c47ed9b'
-BASE_URL = 'http://ws.audioscrobbler.com/2.0/'
+API_KEY = 
+BASE_URL = 
 
 def get_calming_tracks():
     params = {
@@ -13,7 +13,7 @@ def get_calming_tracks():
         'limit': 10  # Adjust the limit as needed
     }
 
-    response = requests.get(BASE_URL, params=params)
+    response = requests.get('http://ws.audioscrobbler.com/2.0/', params=params)
     if response.status_code == 200:
         data = response.json()
         tracks = data.get('tracks', {}).get('track', [])
