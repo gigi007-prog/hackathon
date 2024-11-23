@@ -1,6 +1,17 @@
+import requests
+import random
+import time
+import sys
+import os
 import psycopg2
 import datetime
+from entertainment_rec_functions import *
+from config import *
+from terminal_effects import *
+
+clear_terminal()
 print(datetime.date.today())
+
 print('Hello this is an app which will help you deal with your stress and anxiety ')
 print('We will ask you a few questions on your stress/anxiety levels and moods')
 
@@ -27,14 +38,77 @@ class StressAssessement:
         will display the name age and stress level
         '''
         print(f'Entered Details: \n Name {self.name}\n Age {self.age}\n Stress level {self.stress_lv}')
-        if self.stress_lv <= 3:
-            print("Your stress levels are quite low. Here are some things that we might recommend:")
-        elif 3< self.stress_lv <=6:
-            print("Your stress levels are slightly elevated. Here are some things that we might recommend:")
-        elif 6< self.stress_lv<=10:
-            print("Your stress levels are quite high maybe it's time you relax and here are some of our recommendations:")
-        else:
-            print("The stress level you entered is invalid please enter how stressed you are from 0 to 10")
+
+        # ----------
+        if self.stress_lv < 0 or self.stress_lv > 10:
+                print("Although times can be stressful and make it hard to focus, please input a number between  0 - 10 so we can provide proper help.")
+
+        elif self.stress_lv == 0:
+            # They're officially stress free, nice message and maybe recommendation
+            pass
+
+        elif self.stress_lv <=3:
+            # Low stress - Goal: light entertainment to relax further
+            print("Hey there! It seems like you might need a little boost. Let's make your day a bit brighter! I have three great suggestions for you:\n\t1 - Watch a relaxing movie to unwind\n\t2 - Listen to some calming music to lift your spirits\n\t3 - Try a fun recipe for some therapeutic cooking\n")
+
+            suggest_entertainment = True
+            something_else = True
+
+            while suggest_entertainment == True:
+                entertainment_selection = (input("Which one sounds good to you? Please type `movie`, `music`, or `recipe` to choose!\n"))
+
+                if entertainment_selection == "movie":
+                    suggest_entertainment = False
+                    something_else = True
+                    recommend_movies()
+                        
+                    while something_else == True:
+                        something_else_input = input("Would you like a different recommendation? Input 'yes' if so, or anything else if not.")
+                        if something_else_input == 'yes':
+                            recommend_movies()
+                        else:
+                            something_else = False
+                            print("Looks like you've decided on your movie, enjoy!")
+
+                elif entertainment_selection == "music":
+                    suggest_entertainment = False
+                    something_else = True
+                    get_calming_music()
+
+                    while something_else == True:
+                        something_else_input = input("Would you like a different recommendation? Input 'yes' if so, or anything else if not.")
+                        if something_else_input == 'yes':
+                            get_calming_music()
+                        else:
+                            something_else = False
+                            print("Looks like you've decided on your music, enjoy!")
+
+                elif entertainment_selection == "recipe":
+                    suggest_entertainment = False
+                    something_else = True
+                    suggest_recipe()
+
+                    while something_else == True:
+                        something_else_input = input("Would you like a different recommendation? Input 'yes' if so, or anything else if not.")
+                        if something_else_input == 'yes':
+                            suggest_recipe()
+                        else:
+                            something_else = False
+                            print("Looks like you've decided on your recipe, bon apetit!")
+                else:
+                    print("Whoops! That wasn't a valid input. Let's try that again.")
+
+        elif self.stress_lv <=6:
+            # Medium stress level, suggest a video for meditation or a meditation technique
+            breathing_exercises()
+
+        elif self.stress_lv <=9:
+            # Very high stress level. Make multiple suggestion as this is the highest stress/anxiety level. Something like breathing technique or some other more serious remedies
+            pass
+
+        elif self.stress_lv == 10:
+            # Super high, suggestions and tell to talk to someone or write things down.
+            pass
 
     @classmethod 
     #@classmethod for Input:
@@ -75,7 +149,7 @@ class StressAssessement:
             with conn.cursor() as cursor:
                 cursor.execute(
                     """
-                    INSERT INTO stress_levels (name, age, stress_level, date_todays)
+                    INSERT INTO stress_lvs (name, age, stress_lv, date_todays)
                     VALUES (%s, %s, %s, %s)
                     """,
                     (self.name, self.age, self.stress_lv, datetime.date.today())
@@ -90,7 +164,7 @@ def sql_connection():
     '''
     try: 
         connection= psycopg2.connect(
-            dbname='stress_levels',
+            dbname='stress_lvs',
             user='gigi',
             password='1234',
             host='localhost',
