@@ -1,4 +1,0 @@
-Hackathon
-API key	d6f35ef82e0c36cd064c1b6d5c47ed9b
-Shared secret	ed9f3749e81d242856f0321aba4aba51
-Registered to	theladeli
