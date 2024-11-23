@@ -81,11 +81,8 @@ class StressAssessement:
                     (self.name, self.age, self.stress_lv, datetime.date.today())
                 )#inserts into the table these values
                 conn.commit()
-                print("Your details have successfully been saved!!!")
         except Exception as e:# e is a variable holds the exception object and it contains information about what went wrong while trying to save the data to sql
             conn.rollback()#a method that will undo all changes made to the database in the case of an error
-            print("There was an issue saving your details: ", e)
-
 
 def sql_connection():
     '''
@@ -98,11 +95,9 @@ def sql_connection():
             password='1234',
             host='localhost',
             port='5432')
-        print("\n Your information have been successfully connected to our database!")
         return connection
 
     except Exception as e:#same as in the save_in_sql we use the same notion but without the rollback
-        print("Failed to connect to the database:( ", e)
         return None    
 
 
