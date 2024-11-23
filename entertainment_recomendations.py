@@ -3,9 +3,7 @@ import random
 import time
 import sys
 import os
-
-TMDB_API = 'eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJjZTIwZDU5MDQyM2ZkYTdhYjZiYTAzNzBhNzgxZWE2NSIsIm5iZiI6MTczMjIxMjI4NS42NDI2NTU0LCJzdWIiOiI2NzNmNzU5ODIxZGE0Mjk2N2ZjNDk5OGIiLCJzY29wZXMiOlsiYXBpX3JlYWQiXSwidmVyc2lvbiI6MX0.Y4ujNx-dUqlIjR2oFFrpGZe7Kl14e57ux3IJ0RxU3us'
-LASTFM_API = 'd6f35ef82e0c36cd064c1b6d5c47ed9b'
+from config import *
 
 # Terminal effects
 def clear_terminal():
@@ -158,7 +156,6 @@ def breathing_exercises():
         time.sleep(2)
 
     typewriter_effect("You've completed the exercise. Feel better already, don't you? 😊")
-
 
 def entertainment_recommendation(stress_level):
 
