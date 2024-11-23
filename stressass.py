@@ -48,8 +48,8 @@ class StressAssessement:
         while True:
             try: #this is used a lot for input validation to check whether its acceotable or not 
                 age = int(input("Please enter your age: "))
-                if age < 0:
-                    print("Age cannot be negative. Please enter a valid age.")
+                if 150<= age <= 0:
+                    print("Age cannot be zero or negative. Please enter a valid age.")
                     continue
                 break
             except ValueError:
