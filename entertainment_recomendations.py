@@ -1,11 +1,38 @@
 import requests
 import random
+import time
+import sys
+import os
 
 TMDB_API = 'eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJjZTIwZDU5MDQyM2ZkYTdhYjZiYTAzNzBhNzgxZWE2NSIsIm5iZiI6MTczMjIxMjI4NS42NDI2NTU0LCJzdWIiOiI2NzNmNzU5ODIxZGE0Mjk2N2ZjNDk5OGIiLCJzY29wZXMiOlsiYXBpX3JlYWQiXSwidmVyc2lvbiI6MX0.Y4ujNx-dUqlIjR2oFFrpGZe7Kl14e57ux3IJ0RxU3us'
 LASTFM_API = 'd6f35ef82e0c36cd064c1b6d5c47ed9b'
 
-stress_level = 22
+# Terminal effects
+def clear_terminal():
+    """Clears the terminal."""
+    os.system('cls' if os.name == 'nt' else 'clear')
 
+def typewriter_effect(text, delay=0.05):
+    """
+    Takes text as input and outputs it with a typewriter effect.
+    """
+    for char in text:
+        sys.stdout.write(char)
+        sys.stdout.flush()
+        time.sleep(delay)
+    print()
+
+def blinking_effect(text, duration=3, interval=0.5):
+    """Displays blinking text in terminal for the input duration"""
+    end_time = time.time() + duration
+    while time.time() < end_time:
+        clear_terminal()
+        print(text)
+        time.sleep(interval)
+        clear_terminal()
+        time.sleep(interval)
+
+# Entertainment suggestions
 def recommend_movies():
     """
     This function asks the user to pick a genre, uses TheMovieDB API to get a list of popular movies within that genre, saves the movie names to a list and then selects a random  movie from the list to return to the user.
@@ -109,6 +136,30 @@ def suggest_recipe():
     print(f"Instructions: {meal['strInstructions']}")
     print(f"Recipe URL: {meal['strSource']}")
 
+def breathing_exercises():
+    """
+    Guides the user through meditation to help relax them, uses terminal for instructions.
+    """
+    print("When times are tough, sometimes you just need to take a moment, focus on your breathing and try relax. Let's start a guided breathing session.")
+    input("\nPress any key to start")
+    
+    for i in range(3): 
+        # prints "breathe in", blinking for three seconds
+        blinking_effect("Breathe In...", duration=5, interval=0.7)
+        
+        typewriter_effect("Hold your breath for 7 seconds...")
+        # waits for 7 seconds
+        time.sleep(7)
+        
+        typewriter_effect("Exhale slowly for 8 seconds...")
+        time.sleep(8)
+        
+        typewriter_effect("Great job! Let's do that again.")
+        time.sleep(2)
+
+    typewriter_effect("You've completed the exercise. Feel better already, don't you? 😊")
+
+
 def entertainment_recommendation(stress_level):
 
     if stress_level < 0 or stress_level > 10:
@@ -171,7 +222,7 @@ def entertainment_recommendation(stress_level):
 
     elif stress_level <=6:
         # Medium stress level, suggest a video for meditation or a meditation technique
-        pass
+        breathing_exercises()
 
     elif stress_level <=9:
         # Very high stress level. Make multiple suggestion as this is the highest stress/anxiety level. Something like breathing technique or some other more serious remedies
@@ -181,4 +232,13 @@ def entertainment_recommendation(stress_level):
         # Super high, suggestions and tell to talk to someone or write things down.
         pass
 
-entertainment_recommendation(int(input("On a scale of 1-10, how are you feeling?")))
+clear_terminal()
+
+ask_user_feeling = True
+# a loop so if the user inputs character instead of num, it just asks the user again rather then crashing
+while ask_user_feeling == True:
+    try:
+        entertainment_recommendation(int(input("On a scale of 1-10, how are you feeling? ")))
+        ask_user_feeling = False
+    except ValueError:
+        print("Please enter a valid number!")
