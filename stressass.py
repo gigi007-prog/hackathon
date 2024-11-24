@@ -1,16 +1,17 @@
+import requests
+import random
 import psycopg2
 import datetime
+from entertainment_rec_functions import *
+from config import *
+from terminal_effects import *
+
+clear_terminal()
 print(datetime.date.today())
-print('Hello this is an app which will help you deal with your stress and anxiety ')
-print('We will ask you a few questions on your stress/anxiety levels and moods')
 
-#we will also ask the users age, name to make this appp more personalized
+print('\nHello this is an app which will help you deal with your stress and anxiety\n\nWe will ask you a few questions on your stress/anxiety levels and moods')
 
-#create an input of rate your stress level from 0-10 
-# stress level rates *idea so far*
-# 0-3 low stress levels for this you can give a recommendation something simple like drinking tea watching movie eating favorite food blah blah
-#4-6 medium stress levels that you can suggest a video for meditation or a meditation technique
-#7-10 very high stress level you should make multiple suggestion to as because this is the highest stress/anxiety level so something like breathing technique some othe rmore serious remedies
+#we will also ask the users age, name to make this app more personalized
 
 class StressAssessement:
     def __init__(self,name, age, stress_lv):
@@ -27,14 +28,78 @@ class StressAssessement:
         will display the name age and stress level
         '''
         print(f'Entered Details: \n Name {self.name}\n Age {self.age}\n Stress level {self.stress_lv}')
-        if self.stress_lv <= 3:
-            print("Your stress levels are quite low. Here are some things that we might recommend:")
-        elif 3< self.stress_lv <=6:
-            print("Your stress levels are slightly elevated. Here are some things that we might recommend:")
-        elif 6< self.stress_lv<=10:
-            print("Your stress levels are quite high maybe it's time you relax and here are some of our recommendations:")
-        else:
-            print("The stress level you entered is invalid please enter how stressed you are from 0 to 10")
+
+        # Dynamic responses depending on users stress levels
+
+        if self.stress_lv < 0 or self.stress_lv > 10:
+                print("Although times can be stressful and make it hard to focus, please input a number between  0 - 10 so we can provide proper help.")
+
+        elif self.stress_lv == 0:
+            # They're officially stress free, nice message, maybe a game.
+            pass
+
+        elif self.stress_lv <=3:
+            # Low stress - Goal: light entertainment to relax further
+            print("\n\nHey there! It seems like you might need a little boost. Let's make your day a bit brighter! I have three great suggestions for you:\n\t1 - Watch a relaxing movie to unwind\n\t2 - Listen to some calming music to lift your spirits\n\t3 - Try a fun recipe for some therapeutic cooking\n")
+
+            suggest_entertainment = True
+            something_else = True
+
+            while suggest_entertainment == True:
+                entertainment_selection = (input("Which one sounds good to you? Please type `movie`, `music`, or `recipe` (or the corresponding number for each) to choose!\n"))
+
+                if entertainment_selection == "movie" or entertainment_selection == "1":
+                    suggest_entertainment = False
+                    something_else = True
+                    recommend_movies()
+                        
+                    while something_else == True:
+                        something_else_input = input("Would you like a different recommendation? Input 'yes' if so, or anything else if not.")
+                        if something_else_input == 'yes':
+                            recommend_movies()
+                        else:
+                            something_else = False
+                            print("Looks like you've decided on your movie, enjoy!")
+
+                elif entertainment_selection == "music" or entertainment_selection == "2":
+                    suggest_entertainment = False
+                    something_else = True
+                    get_calming_music()
+
+                    while something_else == True:
+                        something_else_input = input("Would you like a different recommendation? Input 'yes' if so, or anything else if not.")
+                        if something_else_input == 'yes':
+                            get_calming_music()
+                        else:
+                            something_else = False
+                            print("Looks like you've decided on your music, enjoy!")
+
+                elif entertainment_selection == "recipe" or entertainment_selection == "3":
+                    suggest_entertainment = False
+                    something_else = True
+                    suggest_recipe()
+
+                    while something_else == True:
+                        something_else_input = input("Would you like a different recommendation? Input 'yes' if so, or anything else if not.")
+                        if something_else_input == 'yes':
+                            suggest_recipe()
+                        else:
+                            something_else = False
+                            print("Looks like you've decided on your recipe, bon apetit!")
+                else:
+                    print("Whoops! That wasn't a valid input. Let's try that again.")
+
+        elif self.stress_lv <=6:
+            # Medium stress level, suggest a video for meditation or a meditation technique
+            breathing_exercises()
+
+        elif self.stress_lv <=9:
+            # Very high stress level. Make multiple suggestion as this is the highest stress/anxiety level. Something like breathing technique or some other more serious remedies
+            pass
+
+        elif self.stress_lv == 10:
+            # Super high, suggestions and tell to talk to someone or write things down.
+            pass
 
     @classmethod 
     #@classmethod for Input:
@@ -43,10 +108,10 @@ class StressAssessement:
         '''
         Basically the input itself and 
         '''
-        name = input("Please enter your name here:")
+        name = input("Please enter your name here: ")
         #will start the while loop so it ensures that the data is correct and if its not it will ask the user for the correct data until he enters the correct data
         while True:
-            try: #this is used a lot for input validation to check whether its acceotable or not 
+            try: #this is used a lot for input validation to check whether its acceptable or not 
                 age = int(input("Please enter your age: "))
                 if 150<= age <= 0:
                     print("Age cannot be zero or negative. Please enter a valid age.")
@@ -75,13 +140,14 @@ class StressAssessement:
             with conn.cursor() as cursor:
                 cursor.execute(
                     """
-                    INSERT INTO stress_levels (name, age, stress_level, date_todays)
+                    INSERT INTO stress_lvs (name, age, stress_lv, date_todays)
                     VALUES (%s, %s, %s, %s)
                     """,
                     (self.name, self.age, self.stress_lv, datetime.date.today())
                 )#inserts into the table these values
                 conn.commit()
         except Exception as e:# e is a variable holds the exception object and it contains information about what went wrong while trying to save the data to sql
+            print("\n--- Encountered an error inserting values into the table. ---\n")
             conn.rollback()#a method that will undo all changes made to the database in the case of an error
 
 def sql_connection():
@@ -89,12 +155,12 @@ def sql_connection():
     will connect to postgresql
     '''
     try: 
-        connection= psycopg2.connect(
-            dbname='stress_levels',
-            user='gigi',
-            password='1234',
-            host='localhost',
-            port='5432')
+        connection = psycopg2.connect(
+            dbname = DB_NAME,
+            user = DB_USER,
+            password = DB_PASSWORD,
+            host = DB_HOST,
+            port = DB_PORT)
         return connection
 
     except Exception as e:#same as in the save_in_sql we use the same notion but without the rollback
@@ -107,8 +173,9 @@ def the_program():
     '''
     runs the whole thing
     '''
-    connection= sql_connection()
+    connection = sql_connection()
     if connection:
+        print("\n--- Successfully connected to the database ---\n")
         stress_assessment = StressAssessement.info_from_input()  # Collect user input
         stress_assessment.information()  # Display recommendations
         stress_assessment.save_in_sql(connection)  # Save to the database
@@ -117,4 +184,3 @@ def the_program():
 
 if __name__ == "__main__": #used to make sure that only a specific block of code runs only
     the_program()    
-
