@@ -1,8 +1,5 @@
 import requests
 import random
-import time
-import sys
-import os
 import psycopg2
 import datetime
 from entertainment_rec_functions import *
@@ -15,7 +12,7 @@ print(datetime.date.today())
 print('Hello this is an app which will help you deal with your stress and anxiety ')
 print('We will ask you a few questions on your stress/anxiety levels and moods')
 
-#we will also ask the users age, name to make this appp more personalized
+#we will also ask the users age, name to make this app more personalized
 
 #create an input of rate your stress level from 0-10 
 # stress level rates *idea so far*
@@ -164,9 +161,9 @@ def sql_connection():
     '''
     try: 
         connection= psycopg2.connect(
-            dbname='stress_lvs',
-            user='gigi',
-            password='1234',
+            DB_NAME = 'stress_lvs',
+            DB_USER = 'postgres',
+            DB_PASSWORD = '1234',
             host='localhost',
             port='5432')
         return connection
@@ -181,8 +178,9 @@ def the_program():
     '''
     runs the whole thing
     '''
-    connection= sql_connection()
+    connection = sql_connection()
     if connection:
+        print("Successfully connected")
         stress_assessment = StressAssessement.info_from_input()  # Collect user input
         stress_assessment.information()  # Display recommendations
         stress_assessment.save_in_sql(connection)  # Save to the database
@@ -191,4 +189,3 @@ def the_program():
 
 if __name__ == "__main__": #used to make sure that only a specific block of code runs only
     the_program()    
-

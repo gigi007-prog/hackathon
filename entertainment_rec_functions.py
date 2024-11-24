@@ -1,5 +1,6 @@
 import random
 import requests
+from config import *
 from terminal_effects import *
 
 # Entertainment suggestions

@@ -1,10 +1,10 @@
-import requests
-import random
-import time
-import sys
-import os
-from config import *
-from entertainment_rec_functions import *
+# import requests
+# import random
+# import time
+# import sys
+# import os
+# from config import *
+# from entertainment_rec_functions import *
 
 # Terminal effects
 def clear_terminal():
@@ -163,72 +163,72 @@ def entertainment_recommendation(stress_level):
     if stress_level < 0 or stress_level > 10:
         print("Although times can be stressful and make it hard to focus, please input a number between  0 - 10 so we can provide proper help.")
 
-    elif stress_level == 0:
+    # elif stress_level == 0:
         # They're officially stress free, nice message and maybe recommendation
-        pass
+        # pass
 
     elif stress_level <=3:
         # Low stress - Goal: light entertainment to relax further
-        print("Hey there! It seems like you might need a little boost. Let's make your day a bit brighter! I have three great suggestions for you:\n\t1 - Watch a relaxing movie to unwind\n\t2 - Listen to some calming music to lift your spirits\n\t3 - Try a fun recipe for some therapeutic cooking\n")
+        # print("Hey there! It seems like you might need a little boost. Let's make your day a bit brighter! I have three great suggestions for you:\n\t1 - Watch a relaxing movie to unwind\n\t2 - Listen to some calming music to lift your spirits\n\t3 - Try a fun recipe for some therapeutic cooking\n")
 
-        suggest_entertainment = True
-        something_else = True
+        # suggest_entertainment = True
+        # something_else = True
 
-        while suggest_entertainment == True:
-            entertainment_selection = (input("Which one sounds good to you? Please type `movie`, `music`, or `recipe` to choose!\n"))
+        # while suggest_entertainment == True:
+        #     entertainment_selection = (input("Which one sounds good to you? Please type `movie`, `music`, or `recipe` to choose!\n"))
 
-            if entertainment_selection == "movie":
-                suggest_entertainment = False
-                something_else = True
-                recommend_movies()
+        #     if entertainment_selection == "movie":
+        #         suggest_entertainment = False
+        #         something_else = True
+        #         recommend_movies()
                 
-                while something_else == True:
-                    something_else_input = input("Would you like a different recommendation? Input 'yes' if so, or anything else if not.")
-                    if something_else_input == 'yes':
-                        recommend_movies()
-                    else:
-                        something_else = False
-                        print("Looks like you've decided on your movie, enjoy!")
+                # while something_else == True:
+                #     something_else_input = input("Would you like a different recommendation? Input 'yes' if so, or anything else if not.")
+                #     if something_else_input == 'yes':
+                #         recommend_movies()
+                #     else:
+                #         something_else = False
+                #         print("Looks like you've decided on your movie, enjoy!")
 
-            elif entertainment_selection == "music":
-                suggest_entertainment = False
-                something_else = True
-                get_calming_music()
+            # elif entertainment_selection == "music":
+            #     suggest_entertainment = False
+            #     something_else = True
+            #     get_calming_music()
 
-                while something_else == True:
-                    something_else_input = input("Would you like a different recommendation? Input 'yes' if so, or anything else if not.")
-                    if something_else_input == 'yes':
-                        get_calming_music()
-                    else:
-                        something_else = False
-                        print("Looks like you've decided on your music, enjoy!")
+            #     while something_else == True:
+            #         something_else_input = input("Would you like a different recommendation? Input 'yes' if so, or anything else if not.")
+            #         if something_else_input == 'yes':
+            #             get_calming_music()
+            #         else:
+            #             something_else = False
+            #             print("Looks like you've decided on your music, enjoy!")
 
-            elif entertainment_selection == "recipe":
-                suggest_entertainment = False
-                something_else = True
-                suggest_recipe()
+            # elif entertainment_selection == "recipe":
+            #     suggest_entertainment = False
+            #     something_else = True
+            #     suggest_recipe()
 
-                while something_else == True:
-                    something_else_input = input("Would you like a different recommendation? Input 'yes' if so, or anything else if not.")
-                    if something_else_input == 'yes':
-                        suggest_recipe()
-                    else:
-                        something_else = False
-                        print("Looks like you've decided on your recipe, bon apetit!")
-            else:
-                print("Whoops! That wasn't a valid input. Let's try that again.")
+            #     while something_else == True:
+            #         something_else_input = input("Would you like a different recommendation? Input 'yes' if so, or anything else if not.")
+            #         if something_else_input == 'yes':
+            #             suggest_recipe()
+            #         else:
+            #             something_else = False
+            #             print("Looks like you've decided on your recipe, bon apetit!")
+            # else:
+            #     print("Whoops! That wasn't a valid input. Let's try that again.")
 
-    elif stress_level <=6:
-        # Medium stress level, suggest a video for meditation or a meditation technique
-        breathing_exercises()
+    # elif stress_level <=6:
+    #     # Medium stress level, suggest a video for meditation or a meditation technique
+    #     breathing_exercises()
 
-    elif stress_level <=9:
-        # Very high stress level. Make multiple suggestion as this is the highest stress/anxiety level. Something like breathing technique or some other more serious remedies
-        pass
+    # elif stress_level <=9:
+    #     # Very high stress level. Make multiple suggestion as this is the highest stress/anxiety level. Something like breathing technique or some other more serious remedies
+    #     pass
 
-    elif stress_level == 10:
-        # Super high, suggestions and tell to talk to someone or write things down.
-        pass
+    # elif stress_level == 10:
+    #     # Super high, suggestions and tell to talk to someone or write things down.
+    #     pass
 
 clear_terminal()
 
