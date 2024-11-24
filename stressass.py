@@ -37,10 +37,9 @@ class StressAssessement:
                 print("Although times can be stressful and make it hard to focus, please input a number between  0 - 10 so we can provide proper help.")
 
         elif self.stress_lv == 0:
-            # They're officially stress free, nice message, maybe a game.
-            pass
+            print("\nYou're feeling great! Keep up the positive vibes. 😊 Maybe treat yourself to something you enjoy today!\n")
 
-        elif self.stress_lv <=3:
+        elif self.stress_lv <=6:
             # Low stress - Goal: light entertainment to relax further
             print("\n\nHey there! It seems like you might need a little boost. Let's make your day a bit brighter! I have three great suggestions for you:\n\t1 - Watch a relaxing movie to unwind\n\t2 - Listen to some calming music to lift your spirits\n\t3 - Try a fun recipe for some therapeutic cooking\n")
 
@@ -91,17 +90,13 @@ class StressAssessement:
                 else:
                     print("Whoops! That wasn't a valid input. Let's try that again.")
 
-        elif self.stress_lv <=6:
+        elif self.stress_lv <=9:
             # Medium stress level, suggest a video for meditation or a meditation technique
             breathing_exercises()
 
-        elif self.stress_lv <=9:
-            # Very high stress level. Make multiple suggestion as this is the highest stress/anxiety level. Something like breathing technique or some other more serious remedies
-            pass
-
         elif self.stress_lv == 10:
-            # Super high, suggestions and tell to talk to someone or write things down.
-            pass
+            print("\nIt’s okay to feel overwhelmed right now. Remember, you don’t have to face this alone. Talking to someone you trust, like a friend, family member, or a professional, can really help. \n\nWhen you’re ready, let’s try a calming breathing exercise together.\n")
+            breathing_exercises()
 
     @classmethod 
     #@classmethod for Input:
