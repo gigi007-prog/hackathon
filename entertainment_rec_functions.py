@@ -44,17 +44,20 @@ def recommend_movies():
         "Authorization": f"Bearer {TMDB_API}"
     }
 
-    # Call the API with the URL (and parameters) and keys
-    response = requests.get(url, headers=headers)
-    # Convert the URL into a queryable json format
-    response_data = response.json()
+    try:
+        # Call the API with the URL (and parameters) and keys
+        response = requests.get(url, headers=headers)
+        # Convert the URL into a queryable json format
+        response_data = response.json()
     
-    # Now push only the title of the movie recommendations into a list
-    for movie in response_data["results"]:
-        movie_recommendations.append(movie["title"])
+        # Now push only the title of the movie recommendations into a list
+        for movie in response_data["results"]:
+            movie_recommendations.append(movie["title"])
     
-    # Select a random title from the list
-    print(f"Why not watch '{random.choice(movie_recommendations)}'")
+        # Select a random title from the list
+        print(f"Why not watch '{random.choice(movie_recommendations)}'")
+    except:
+        print("Can not connect to TheMovieDB API. (ensure you are online and you've added the API keys to the config file)")
 
 def get_calming_music():
     """
@@ -73,19 +76,23 @@ def get_calming_music():
         'format': 'json',
         'limit': 10
     }
-    # Calling the API with the parameters
-    response = requests.get('http://ws.audioscrobbler.com/2.0/', params=params)
-    # Saving the response as JSON format
-    response_data = response.json()
-    # Getting specifically the track data (avoiding the excess data alongside the API response)
-    tracks = response_data.get('tracks', {}).get('track', [])
 
-    # Pushing just the relevant track data to a list
-    for track in tracks:
-        music_recommendations.append(f"{track['name']} by {track['artist']['name']} - {track['url']}")
+    try:
+        # Calling the API with the parameters
+        response = requests.get('http://ws.audioscrobbler.com/2.0/', params=params)
+        # Saving the response as JSON format
+        response_data = response.json()
+        # Getting specifically the track data (avoiding the excess data alongside the API response)
+        tracks = response_data.get('tracks', {}).get('track', [])
 
-    # Selecting a random track from the list to return to the user
-    print(f"Here's a song for you: {random.choice(music_recommendations)}")
+        # Pushing just the relevant track data to a list
+        for track in tracks:
+            music_recommendations.append(f"{track['name']} by {track['artist']['name']} - {track['url']}")
+
+        # Selecting a random track from the list to return to the user
+        print(f"Here's a song for you: {random.choice(music_recommendations)}")
+    except:
+        print("Can not connect to LastFM API (ensure you are online and you've added the API keys to the config file).")
 
 def suggest_recipe():
     """
@@ -94,36 +101,39 @@ def suggest_recipe():
 
     print("Cooking is a wonderful way to relax! Let me fetch a recipe for you…")
 
-    # Calling the API for a random recipe
-    response = requests.get('https://www.themealdb.com/api/json/v1/1/random.php')
+    try:
+        # Calling the API for a random recipe
+        response = requests.get('https://www.themealdb.com/api/json/v1/1/random.php')
 
-    # saving the response as json format
-    data = response.json()
-    # getting specifically the meal data, avoiding any excess response info
-    meal = data.get('meals', [])[0]
-    # printing the relevant parts to the recipe
-    print(f"How about trying this: {meal['strMeal']}? Quick, easy, and oh-so-comforting.")
-    print(f"Category: {meal['strCategory']}")
-    print(f"Instructions: {meal['strInstructions']}")
-    print(f"Recipe URL: {meal['strSource']}")
+        # saving the response as json format
+        data = response.json()
+        # getting specifically the meal data, avoiding any excess response info
+        meal = data.get('meals', [])[0]
+        # printing the relevant parts to the recipe
+        print(f"How about trying this: {meal['strMeal']}? Quick, easy, and oh-so-comforting.\n----------\n\n")
+        print(f"Category: {meal['strCategory']}\n")
+        print(f"Instructions: {meal['strInstructions']}\n")
+        print(f"Recipe URL: {meal['strSource']}")
+    except:
+        print("Can not connect to TheMealDB API (ensure you are online and you've added the API keys to the config file).")
 
 def breathing_exercises():
     """
     Guides the user through meditation to help relax them, uses terminal for instructions.
     """
     print("When times are tough, sometimes you just need to take a moment, focus on your breathing and try relax. Let's start a guided breathing session.")
-    input("\nPress any key to start")
+    input("\nPress enter to start")
     
     for i in range(3): 
         # prints "breathe in", blinking for three seconds
         blinking_effect("Breathe In...", duration=5, interval=0.7)
         
-        typewriter_effect("Hold your breath for 7 seconds...")
+        typewriter_effect("Hold your breath for 6 seconds...")
         # waits for 7 seconds
-        time.sleep(7)
+        time.sleep(6)
         
-        typewriter_effect("Exhale slowly for 8 seconds...")
-        time.sleep(8)
+        typewriter_effect("Exhale slowly for 6 seconds...")
+        time.sleep(6)
         
         typewriter_effect("Great job! Let's do that again.")
         time.sleep(2)
