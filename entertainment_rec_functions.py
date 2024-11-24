@@ -9,12 +9,12 @@ def recommend_movies():
     This function asks the user to pick a genre, uses TheMovieDB API to get a list of popular movies within that genre, saves the movie names to a list and then selects a random  movie from the list to return to the user.
     """
 
-    print("Movies sound like a great idea!")
+    print("\nMovies sound like a great idea!")
 
     movie_recommendations = []
 
     # Asks the user to select a movie genre and saves the selection to a variable
-    genre_num = int(input("What genre movie would you like? Input a number for a movie suggestion in the corresponding genre.\n1 - Action    2 - Comedy    3 - Drama    4 - Thriller\n5 - Horror    6 - Romance    7 - Science Fiction    8 - Fantasy\n"))
+    genre_num = int(input("\nWhat genre movie would you like? Input a number for a movie suggestion in the corresponding genre.\n1 - Action    2 - Comedy    3 - Drama    4 - Thriller\n5 - Horror    6 - Romance    7 - Science Fiction    8 - Fantasy\n"))
 
     # An empty variable we'll use to store the selected genre
     genre = ''
@@ -55,16 +55,16 @@ def recommend_movies():
             movie_recommendations.append(movie["title"])
     
         # Select a random title from the list
-        print(f"Why not watch '{random.choice(movie_recommendations)}'")
+        print(f"\nWhy not watch '{random.choice(movie_recommendations)}'")
     except:
-        print("Can not connect to TheMovieDB API. (ensure you are online and you've added the API keys to the config file)")
+        print("\n--- Can not connect to TheMovieDB API. (ensure you are online and you've added the API keys to the config file) ---\n")
 
 def get_calming_music():
     """
     Uses LastFM API to return a calming music playlist.
     """
 
-    print("Music it is! A calming tune can work wonders. Let me grab something for you…")
+    print("\nMusic it is! A calming tune can work wonders. Let me grab something for you…")
 
     music_recommendations = []
     
@@ -90,16 +90,16 @@ def get_calming_music():
             music_recommendations.append(f"{track['name']} by {track['artist']['name']} - {track['url']}")
 
         # Selecting a random track from the list to return to the user
-        print(f"Here's a song for you: {random.choice(music_recommendations)}")
+        print(f"\nHere's a song for you: {random.choice(music_recommendations)}")
     except:
-        print("Can not connect to LastFM API (ensure you are online and you've added the API keys to the config file).")
+        print("\n--- Can not connect to LastFM API (ensure you are online and you've added the API keys to the config file). ---\n")
 
 def suggest_recipe():
     """
     Connects to TheMealDB API for a random recipe.
     """
 
-    print("Cooking is a wonderful way to relax! Let me fetch a recipe for you…")
+    print("\nCooking is a wonderful way to relax! Let me fetch a recipe for you…")
 
     try:
         # Calling the API for a random recipe
@@ -110,12 +110,12 @@ def suggest_recipe():
         # getting specifically the meal data, avoiding any excess response info
         meal = data.get('meals', [])[0]
         # printing the relevant parts to the recipe
-        print(f"How about trying this: {meal['strMeal']}? Quick, easy, and oh-so-comforting.\n----------\n\n")
+        print(f"\n\nHow about trying this: {meal['strMeal']}? Quick, easy, and oh-so-comforting.\n----------\n\n")
         print(f"Category: {meal['strCategory']}\n")
         print(f"Instructions: {meal['strInstructions']}\n")
         print(f"Recipe URL: {meal['strSource']}")
     except:
-        print("Can not connect to TheMealDB API (ensure you are online and you've added the API keys to the config file).")
+        print("\n--- Can not connect to TheMealDB API (ensure you are online and you've added the API keys to the config file). ---")
 
 def breathing_exercises():
     """

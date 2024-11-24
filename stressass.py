@@ -40,7 +40,7 @@ class StressAssessement:
 
         elif self.stress_lv <=3:
             # Low stress - Goal: light entertainment to relax further
-            print("Hey there! It seems like you might need a little boost. Let's make your day a bit brighter! I have three great suggestions for you:\n\t1 - Watch a relaxing movie to unwind\n\t2 - Listen to some calming music to lift your spirits\n\t3 - Try a fun recipe for some therapeutic cooking\n")
+            print("\n\nHey there! It seems like you might need a little boost. Let's make your day a bit brighter! I have three great suggestions for you:\n\t1 - Watch a relaxing movie to unwind\n\t2 - Listen to some calming music to lift your spirits\n\t3 - Try a fun recipe for some therapeutic cooking\n")
 
             suggest_entertainment = True
             something_else = True
@@ -108,7 +108,7 @@ class StressAssessement:
         '''
         Basically the input itself and 
         '''
-        name = input("Please enter your name here:")
+        name = input("Please enter your name here: ")
         #will start the while loop so it ensures that the data is correct and if its not it will ask the user for the correct data until he enters the correct data
         while True:
             try: #this is used a lot for input validation to check whether its acceptable or not 
@@ -147,7 +147,7 @@ class StressAssessement:
                 )#inserts into the table these values
                 conn.commit()
         except Exception as e:# e is a variable holds the exception object and it contains information about what went wrong while trying to save the data to sql
-            print("Encountered an error inserting values into the table.")
+            print("\n--- Encountered an error inserting values into the table. ---\n")
             conn.rollback()#a method that will undo all changes made to the database in the case of an error
 
 def sql_connection():
@@ -155,7 +155,7 @@ def sql_connection():
     will connect to postgresql
     '''
     try: 
-        connection= psycopg2.connect(
+        connection = psycopg2.connect(
             dbname = DB_NAME,
             user = DB_USER,
             password = DB_PASSWORD,
