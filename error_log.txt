@@ -1,0 +1,15 @@
+2024-11-24 20:44:58.706571 - Error during INSERT operation: relation "stress_lvs" does not exist
+LINE 2:                     INSERT INTO stress_lvs (name, age, stres...
+                                        ^
+
+Attempted data: Name=Georgia, Age=19, Stress Level=1, Date=2024-11-24
+2024-11-24 20:47:45.878383 - Error during INSERT operation: column "stress_lv" of relation "stress_lvs" does not exist
+LINE 2: ...               INSERT INTO stress_lvs (name, age, stress_lv,...
+                                                             ^
+
+Attempted data: Name=Georgia, Age=19, Stress Level=1, Date=2024-11-24
+2024-11-24 20:49:16.636864 - Error during INSERT operation: column "stress_lv" of relation "stress_lvs" does not exist
+LINE 2: ...               INSERT INTO stress_lvs (name, age, stress_lv,...
+                                                             ^
+
+Attempted data: Name=Georgia, Age=19, Stress Level=1, Date=2024-11-24

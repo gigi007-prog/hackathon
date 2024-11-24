@@ -2,12 +2,14 @@ import requests
 import random
 import psycopg2
 import datetime
+import json
+from datetime import datetime 
 from entertainment_rec_functions import *
 from config import *
 from terminal_effects import *
 
 clear_terminal()
-print(datetime.date.today())
+print(datetime.now().date())
 
 print('\nHello this is an app which will help you deal with your stress and anxiety\n\nWe will ask you a few questions on your stress/anxiety levels and moods')
 
@@ -131,40 +133,50 @@ class StressAssessement:
                 print("You entered an invalid number for stress level.")
         return cls(name, age, stress_lv) #returns the class itself and is usually used in @classmethod refers to a classs and not an instance 
     
-    #connecting the information to postgresql 
-    def save_in_sql(self, conn): #conn used to connect python and sql together and is basically 'connection'
+
+    def save_in_sql(self, conn):
         '''
-        will save the stress levels and other details on the sql database
+        Saves user details to the PostgreSQL database.
         '''
         try:
             with conn.cursor() as cursor:
                 cursor.execute(
                     """
-                    INSERT INTO stress_lvs (name, age, stress_lv, date_todays)
+                    INSERT INTO stress_lvs (name, age, stress_level, date_todays)
                     VALUES (%s, %s, %s, %s)
                     """,
-                    (self.name, self.age, self.stress_lv, datetime.date.today())
-                )#inserts into the table these values
+                    (self.name, self.age, self.stress_lv, datetime.now().date())
+                )
                 conn.commit()
-        except Exception as e:# e is a variable holds the exception object and it contains information about what went wrong while trying to save the data to sql
-            print("\n--- Encountered an error inserting values into the table. ---\n")
-            conn.rollback()#a method that will undo all changes made to the database in the case of an error
+                print("Data saved successfully!")
+        except Exception as e:
+            print(f"Error saving to database: {e}")
+            with open("error_log.txt", "a") as log_file:
+                log_file.write(f"{datetime.datetime.now()} - Error during INSERT operation: {e}\n")
+                log_file.write(f"Attempted data: Name={self.name}, Age={self.age}, Stress Level={self.stress_lv}, Date={datetime.now().date()}\n")
+            conn.rollback()
+
+
 
 def sql_connection():
     '''
-    will connect to postgresql
+    Establishes connection to PostgreSQL.
     '''
-    try: 
+    try:
         connection = psycopg2.connect(
-            dbname = DB_NAME,
-            user = DB_USER,
-            password = DB_PASSWORD,
-            host = DB_HOST,
-            port = DB_PORT)
+            dbname=DB_NAME,
+            user=DB_USER,
+            password=DB_PASSWORD,
+            host=DB_HOST,
+            port=DB_PORT
+        )
         return connection
+    except Exception as e:
+        print(f"Error connecting to the database: {e}")
+        with open("error_log.txt", "a") as log_file:
+            log_file.write(f"{datetime.datetime.now()} - Database connection error: {e}\n")
+        return None
 
-    except Exception as e:#same as in the save_in_sql we use the same notion but without the rollback
-        return None    
 
 
 #the function to run the program cause who wants to waste code lines 
@@ -184,3 +196,102 @@ def the_program():
 
 if __name__ == "__main__": #used to make sure that only a specific block of code runs only
     the_program()    
+
+
+
+
+print("In this section we will evaluate your mood ")
+
+# the file that will store the mood
+MOOD_FILE = "mood_data.json"
+
+# starting by initializing the JSON file
+def json_initialize():
+    '''
+    will create the json file
+    '''
+    try:
+        with open(MOOD_FILE, "r") as file:
+            json.load(file)
+    except (FileNotFoundError, json.JSONDecodeError): #if the file doesnt exist and it contains invalid json 
+        #data it will create a new file with an empty list
+        with open(MOOD_FILE, "w") as file:
+            json.dump([], file)
+
+
+# to add a new mood entry 
+def mood_input():
+    '''
+    input for mood 
+    '''
+    mood = input("How are you feeling today? Are you happy, sad, angry, etc: ").strip()
+    extra = input("Would you like to add anything else, like a note? ").strip()
+    timestamp = datetime.now().isoformat()  # Convert datetime object into a string
+    
+    mood_entry = {"timestamp": timestamp, "mood": mood, "notes": extra}
+
+    #will read whats already in the json file and append it with the input we got
+    with open(MOOD_FILE, "r") as file:
+        info = json.load(file)
+    info.append(mood_entry)
+
+    #saves updated data to the file
+    with open(MOOD_FILE, "w") as file:
+        json.dump(info, file, indent=5) #indent is used to format the json output with the 
+        #indentation of 5 space and provides better readability
+    
+    print("Mood entry has been added!")
+
+
+#to view mood history 
+def mood_his():
+    '''
+    View previous moods.
+    '''
+    with open(MOOD_FILE, "r") as file:
+        data = json.load(file)
+    
+    if not data:
+        print("No mood entries found.")
+        return
+    
+    print("\nMood History:")
+    for entry in data:
+        # Handle old and new key names
+        timestamp = entry.get("timestamp") or entry.get("time right now")
+        notes = entry.get("notes") or entry.get("details")
+        
+        if timestamp:
+            timestamp = datetime.fromisoformat(timestamp).strftime("%Y-%m-%d %H:%M:%S")#converting and formatting the recorded timestamps
+        else:
+            timestamp = "Unknown Time"
+        
+        mood = entry.get("mood", "Unknown Mood")
+        print(f"- {timestamp} | Mood: {mood} | Notes: {notes}")
+
+
+
+#making a mood menu to pick if the user wants to see mood history or input more moods
+def menu():
+    json_initialize()
+    while True:
+        print("\nMood Tracker Menu:")
+        print("\n1. To Add Mood")
+        print("\n2. To View Mood History")
+        print("\n3. To Exit")
+
+        choose = input("Select the option you want: ").strip()
+        if choose=="1":
+            mood_input()
+        elif choose=="2":
+            mood_his()
+        elif choose=="3":
+            print("Bye thank you for using our app")
+            break
+        else:
+            print("Invalid choice. Please try again.")
+
+if __name__ == "__main__":
+    menu()
+
+
